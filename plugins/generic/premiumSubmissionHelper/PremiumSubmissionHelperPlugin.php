@@ -65,7 +65,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
      *
      * @return bool True si l'enregistrement a réussi
      */
-    public function register(string $category, string $path, ?int $mainContextId = null): bool
+    public function register($category, $path, $mainContextId = null)
     {
         $success = parent::register($category, $path, $mainContextId);
 
