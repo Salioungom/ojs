@@ -1,55 +1,16 @@
 <?php
 
-/**
- * @file plugins/generic/premiumSubmissionHelper/PremiumSubmissionHelper.php
- * @class PremiumSubmissionHelperPlugin
- * @ingroup plugins_generic_premiumSubmissionHelper
- *
- * @brief Premium submission helper plugin for OJS
- */
-
 declare(strict_types=1);
 
 namespace APP\plugins\generic\premiumSubmissionHelper;
 
-// Framework imports
 use APP\core\Application;
-use APP\facades\Repo;
-use APP\notification\form\ValidationForm;
-use PKP\core\JSONMessage;
-use PKP\core\PKPString;
-use PKP\notification\NotificationManager;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
-use PKP\plugins\PluginRegistry;
-use PKP\security\Role;
-use PKP\security\authorization\PolicySet;
-use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
-use PKP\security\authorization\UserRequiredPolicy;
-use PKP\security\authorization\UserRolesRequiredPolicy;
-// Plugin imports
-use APP\plugins\generic\premiumSubmissionHelper\classes\PremiumSubmissionHelperLog;
 use APP\plugins\generic\premiumSubmissionHelper\classes\PremiumSubmissionHelperLogDAO;
-use APP\plugins\generic\premiumSubmissionHelper\classes\form\SettingsForm;
-use APP\plugins\generic\premiumSubmissionHelper\controllers\PremiumSubmissionHelperSettingsHandler;
-use APP\plugins\generic\premiumSubmissionHelper\controllers\grid\settings\PremiumSubmissionHelperSettingsGridHandler;
-use APP\plugins\generic\premiumSubmissionHelper\scheduledTasks\PremiumSubmissionHelperScheduledTask;
-use APP\plugins\generic\premiumSubmissionHelper\upgrade\PremiumSubmissionHelperUpgrade;
 
-/**
- * Classe principale du plugin Premium Helper
- *
- * Gère l'initialisation du plugin, l'injection des éléments d'interface utilisateur
- * et la configuration des routes d'API.
- *
- * @package APP\plugins\generic\premiumSubmissionHelper
- */
 class PremiumSubmissionHelperPlugin extends GenericPlugin
 {
-    /**
-     * Rôles autorisés à utiliser la fonctionnalité premium
-     * @var array<int>
-     */
     protected const ALLOWED_ROLES = [
         ROLE_ID_MANAGER,
         ROLE_ID_SUB_EDITOR,
@@ -58,12 +19,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
     /**
      * Enregistre le plugin
-     *
-     * @param string $category Catégorie du plugin
-     * @param string $path Chemin du plugin
-     * @param int|null $mainContextId ID du contexte principal
-     *
-     * @return bool True si l'enregistrement a réussi
      */
     public function register($category, $path, $mainContextId = null)
     {
@@ -83,31 +38,25 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
             $this->import('scheduledTasks.PremiumSubmissionHelperScheduledTask');
             Hook::add('Schema::get::premiumSubmissionHelperLog', [$this, 'addLogSchema']);
         }
+
         return $success;
     }
-    /**
-     * @copydoc Plugin::getDisplayName()
-     */
+
     public function getDisplayName(): string
     {
         return (string) __('plugins.generic.premiumSubmissionHelper');
     }
 
-    /**
-     * @copydoc Plugin::getDescription()
-     */
     public function getDescription(): string
     {
         return (string) __('plugins.generic.premiumSubmissionHelper.description');
     }
 
-    /**
-     * @copydoc Plugin::getInstallSitePluginSettingsFile()
-     */
     public function getInstallSitePluginSettingsFile()
     {
         return 'plugins/generic/premiumSubmissionHelper/settings.xml';
     }
+
     public function injectAnalysisButton($hookName, $args)
     {
         $templateMgr = $args[0];
@@ -116,6 +65,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if ($template !== 'submission/form/step1.tpl') {
             return false;
         }
+
         $request = Application::get()->getRequest();
         $user = $request->getUser();
         $context = $request->getContext();
@@ -123,14 +73,9 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if (!$user || !$context) {
             return false;
         }
-        $isPremiumUser = $this->isUserPremium($context->getId());
 
-        $apiUrl = $request->getDispatcher()->url(
-            $request,
-            ROUTE_PAGE,
-            null,
-            self::API_URL
-        );
+        $isPremiumUser = $this->isUserPremium($context->getId());
+        $apiUrl = $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::API_URL);
 
         $templateMgr->assign([
             'isPremiumUser' => $isPremiumUser,
@@ -142,6 +87,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
         return false;
     }
+
     public function setupAPIHandler($hookName, $args)
     {
         $page = $args[0];
@@ -154,8 +100,10 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
             $handler->handle($op, $sourceFile);
             return true;
         }
+
         return false;
     }
+
     public function addScripts($hookName, $args)
     {
         $templateMgr = TemplateManager::getManager();
@@ -165,12 +113,14 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if (!$router) {
             return false;
         }
+
         $requestedPage = $router->getRequestedPage($request);
         $requestedOp = $router->getRequestedOp($request);
 
         if ($requestedPage !== 'submission' || $requestedOp !== 'wizard') {
             return false;
         }
+
         $templateMgr->addStyleSheet(
             'premiumSubmissionHelperStyles',
             $request->getBaseUrl() . '/' . $this->getPluginPath() . '/styles/premiumSubmissionHelper.css',
@@ -185,20 +135,16 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
         return false;
     }
+
     public function isUserPremium(int $contextId): bool
     {
         $request = Application::get()->getRequest();
         $user = $request->getUser();
-
         if (!$user) {
             return false;
         }
-        $allowedRoles = [
-            ROLE_ID_MANAGER,
-            ROLE_ID_SUB_EDITOR,
-            ROLE_ID_SITE_ADMIN
-        ];
 
+        $allowedRoles = [ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR, ROLE_ID_SITE_ADMIN];
         $userRoles = $user->getRoles($contextId);
 
         foreach ($userRoles as $role) {
@@ -206,6 +152,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
                 return true;
             }
         }
+
         return false;
     }
 }
