@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * @file plugins/generic/premiumSubmissionHelper/PremiumSubmissionHelper.php
@@ -7,6 +6,8 @@ declare(strict_types=1);
  * @ingroup plugins_generic_premiumSubmissionHelper
  * @brief Plugin d'aide à la soumission premium pour OJS
  */
+
+declare(strict_types=1);
 
 namespace APP\plugins\generic\premiumSubmissionHelper;
 
@@ -25,21 +26,14 @@ use PKP\security\authorization\PolicySet;
 use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use PKP\security\authorization\UserRequiredPolicy;
 use PKP\security\authorization\UserRolesRequiredPolicy;
-
 // Plugin imports
-use APP\plugins\generic\premiumSubmissionHelper\classes\{
-    PremiumSubmissionHelperLog,
-    PremiumSubmissionHelperLogDAO
-};
+use APP\plugins\generic\premiumSubmissionHelper\classes\PremiumSubmissionHelperLog;
+use APP\plugins\generic\premiumSubmissionHelper\classes\PremiumSubmissionHelperLogDAO;
 use APP\plugins\generic\premiumSubmissionHelper\classes\form\SettingsForm;
-use APP\plugins\generic\premiumSubmissionHelper\controllers\{
-    PremiumSubmissionHelperSettingsHandler,
-    grid\settings\PremiumSubmissionHelperSettingsGridHandler
-};
-use APP\plugins\generic\premiumSubmissionHelper\{
-    scheduledTasks\PremiumSubmissionHelperScheduledTask,
-    upgrade\PremiumSubmissionHelperUpgrade
-};
+use APP\plugins\generic\premiumSubmissionHelper\controllers\PremiumSubmissionHelperSettingsHandler;
+use APP\plugins\generic\premiumSubmissionHelper\controllers\grid\settings\PremiumSubmissionHelperSettingsGridHandler;
+use APP\plugins\generic\premiumSubmissionHelper\scheduledTasks\PremiumSubmissionHelperScheduledTask;
+use APP\plugins\generic\premiumSubmissionHelper\upgrade\PremiumSubmissionHelperUpgrade;
 
 /**
  * Classe principale du plugin Premium Helper
@@ -88,20 +82,16 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
             $this->import('scheduledTasks.PremiumSubmissionHelperScheduledTask');
             Hook::add('Schema::get::premiumSubmissionHelperLog', [$this, 'addLogSchema']);
         }
-
         return $success;
     }
-
     public function getDisplayName(): string
     {
         return (string) __('plugins.generic.premiumSubmissionHelper.displayName');
     }
-
     public function getDescription(): string
     {
         return (string) __('plugins.generic.premiumSubmissionHelper.description');
     }
-
     public function injectAnalysisButton(string $hookName, array $args): bool
     {
         $templateMgr = $args[0];
@@ -110,7 +100,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if ($template !== 'submission/form/step1.tpl') {
             return false;
         }
-
         $request = Application::get()->getRequest();
         $user = $request->getUser();
         $context = $request->getContext();
@@ -118,7 +107,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if (!$user || !$context) {
             return false;
         }
-
         $isPremiumUser = $this->isUserPremium($context->getId());
 
         $apiUrl = $request->getDispatcher()->url(
@@ -138,7 +126,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
         return false;
     }
-
     public function setupAPIHandler(string $hookName, array $args): bool
     {
         $page = $args[0];
@@ -151,10 +138,8 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
             $handler->handle($op, $sourceFile);
             return true;
         }
-
         return false;
     }
-
     public function addScripts(string $hookName, array $args): bool
     {
         $templateMgr = TemplateManager::getManager();
@@ -164,14 +149,12 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if (!$router) {
             return false;
         }
-
         $requestedPage = $router->getRequestedPage($request);
         $requestedOp = $router->getRequestedOp($request);
 
         if ($requestedPage !== 'submission' || $requestedOp !== 'wizard') {
             return false;
         }
-
         $templateMgr->addStyleSheet(
             'premiumSubmissionHelperStyles',
             $request->getBaseUrl() . '/' . $this->getPluginPath() . '/styles/premiumSubmissionHelper.css',
@@ -186,7 +169,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
         return false;
     }
-
     public function isUserPremium(int $contextId): bool
     {
         $request = Application::get()->getRequest();
@@ -195,7 +177,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         if (!$user) {
             return false;
         }
-
         $allowedRoles = [
             ROLE_ID_MANAGER,
             ROLE_ID_SUB_EDITOR,
@@ -209,8 +190,6 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
                 return true;
             }
         }
-
         return false;
     }
 }
-

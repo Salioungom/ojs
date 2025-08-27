@@ -1,25 +1,92 @@
+# Configuration files
 /config.inc.php
-./build
-temp
-/files
-/plugins/paymethod/paypal/vendor/
 .htaccess
+.env
+!.env.example
+!.env.testing
+!.env.local
+
+# Build directories
+/build
+/js/build
+/js/build.js
+/js/build_frontend.js
+/js/hot-updates
+/styles/build.css
+/styles/build_frontend.css
+
+# Dependencies
+/node_modules
+/vendor
+/plugins/*/vendor
+/plugins/*/node_modules
+
+# Cache and temp files
+/temp
+/tmp
+/.php_cs.cache
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/.phpunit.cache
+/composer.lock
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+
+# IDE and editor files
 .project
 .buildpath
 .settings
+.idea
+.vscode
+*.sublime-*
+*.swp
+*.swo
 .DS_Store
-.php_cs.cache
-.php-cs-fixer.cache
-node_modules
-js/build/
-js/build.js
-js/build_frontend.js
-js/hot-updates
-styles/build.css
-styles/build_frontend.css 
-cypress.env.json
-cypress/logs/
-cypress/screenshots/
-.phpunit.result.cache
+
+# Testing
+/cypress.env.json
+/cypress/logs/
+/cypress/screenshots/
+/coverage/
+.phpunit.cache/
+
+# Plugin specific
 /plugins/themes/default/js/lib/swiper/
-registry/uiLocaleKeysBackend.json
+/registry/uiLocaleKeysBackend.json
+/plugins/*/composer.lock
+/plugins/*/package-lock.json
+/plugins/*/yarn.lock
+/plugins/*/pnpm-lock.yaml
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local development
+!.gitkeep
+
+# Custom files and directories
+/files
+/cache
+/public/cache
+/public/files
+/public/site
+/public/sitemap.xml
+/public/sitemap*.xml.gz
+/public/.htaccess
+/public/.user.ini
+
+# Ignore pnpm store
+.pnpm-store/
+.pnpm-debug.log*
+
+# Ignore local overrides
+*.local.*
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.sublime-*
