@@ -4,7 +4,8 @@
  * @file plugins/generic/premiumSubmissionHelper/PremiumSubmissionHelper.php
  * @class PremiumSubmissionHelperPlugin
  * @ingroup plugins_generic_premiumSubmissionHelper
- * @brief Plugin d'aide à la soumission premium pour OJS
+ *
+ * @brief Premium submission helper plugin for OJS
  */
 
 declare(strict_types=1);
@@ -84,13 +85,28 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         }
         return $success;
     }
+    /**
+     * @copydoc Plugin::getDisplayName()
+     */
     public function getDisplayName(): string
     {
-        return (string) __('plugins.generic.premiumSubmissionHelper.displayName');
+        return (string) __('plugins.generic.premiumSubmissionHelper');
     }
+
+    /**
+     * @copydoc Plugin::getDescription()
+     */
     public function getDescription(): string
     {
         return (string) __('plugins.generic.premiumSubmissionHelper.description');
+    }
+
+    /**
+     * @copydoc Plugin::getInstallSitePluginSettingsFile()
+     */
+    public function getInstallSitePluginSettingsFile()
+    {
+        return 'plugins/generic/premiumSubmissionHelper/settings.xml';
     }
     public function injectAnalysisButton(string $hookName, array $args): bool
     {

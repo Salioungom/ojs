@@ -5,7 +5,7 @@
     <type>plugins.generic</type>
     <code>premiumSubmissionHelper</code>
     <name>Premium Submission Helper</name>
-    <class>PremiumSubmissionHelperPlugin</class>
+    <class>APP\plugins\generic\premiumSubmissionHelper\PremiumSubmissionHelperPlugin</class>
     <description>plugins.generic.premiumSubmissionHelper.description</description>
     <release>1.1.0</release>
     <date>2025-08-25</date>
