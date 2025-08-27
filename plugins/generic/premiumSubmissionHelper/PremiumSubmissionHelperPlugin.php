@@ -108,7 +108,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
     {
         return 'plugins/generic/premiumSubmissionHelper/settings.xml';
     }
-    public function injectAnalysisButton(string $hookName, array $args): bool
+    public function injectAnalysisButton($hookName, $args)
     {
         $templateMgr = $args[0];
         $template = $args[1];
@@ -142,7 +142,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
 
         return false;
     }
-    public function setupAPIHandler(string $hookName, array $args): bool
+    public function setupAPIHandler($hookName, $args)
     {
         $page = $args[0];
         $op = $args[1];
@@ -156,7 +156,7 @@ class PremiumSubmissionHelperPlugin extends GenericPlugin
         }
         return false;
     }
-    public function addScripts(string $hookName, array $args): bool
+    public function addScripts($hookName, $args)
     {
         $templateMgr = TemplateManager::getManager();
         $request = Application::get()->getRequest();
