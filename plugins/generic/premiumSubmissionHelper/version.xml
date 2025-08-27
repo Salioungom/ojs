@@ -17,11 +17,6 @@
             <path>locale/fr_FR/LC_MESSAGES</path>
             <path>locale/en_US/LC_MESSAGES</path>
         </mkdir>
-    </install>
-    <lazy-load>0</lazy-load>
-    <php-version>8.3.0</php-version>
-    <sitewide>0</sitewide>
-    <install>
         <permit>1</permit>
     </install>
     <uninstall>
@@ -32,6 +27,5 @@
     </upgrade>
     <requires>
         <app-version>3.4.0</app-version>
-        <php>8.3.0</php>
     </requires>
 </version>
